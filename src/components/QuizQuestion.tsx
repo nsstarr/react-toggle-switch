@@ -11,7 +11,6 @@ interface AnswerOption {
 interface QuizQuestionProps {
   question: string;
   answers: AnswerOption[];
-  onAnswerCorrect: () => void;
 }
 
 const QuizQuestion: React.FC<QuizQuestionProps> = ({
