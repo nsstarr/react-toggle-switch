@@ -1,27 +1,36 @@
 import React from "react";
 import QuestionToggle from "./components/QuestionToggle";
+import QuizQuestion from "./components/QuizQuestion";
 
 const App: React.FC = () => {
-  const handleCorrectAnswer = () => {
-    console.log("All correct answers selected!");
-  };
-
   const question = "Select the correct answers for the following:";
 
-  // Four groups of multiple-choice options (some with 2 options, some with 3)
   const answers = [
-    { id: 3, label: "Option A", correct: false },
-    { id: 4, label: "Option B", correct: true },
-    { id: 5, label: "Option C", correct: false },
+    {
+      id: 1,
+      label: "Option 1",
+      correct: true,
+    },
+    {
+      id: 2,
+      label: "Option 2",
+      correct: false,
+    },
+    {
+      id: 3,
+      label: "Option 3",
+      correct: true,
+    },
+    {
+      id: 4,
+      label: "Option 4",
+      correct: false,
+    },
   ];
 
   return (
     <div className="App">
-      <QuestionToggle
-        question={question}
-        answers={answers}
-        onAnswerCorrect={handleCorrectAnswer}
-      />
+      <QuizQuestion question={question} answers={answers} />
     </div>
   );
 };

@@ -5,15 +5,12 @@ interface AnswerOption {
   label: string;
   correct: boolean;
 }
-
-interface QuestionToggleProps {
-  question: string;
+interface AnswerToggleProps {
   answers: AnswerOption[]; // A single list of answers (instead of groups)
   onAnswerCorrect: () => void; // Callback when the correct answer is selected
 }
 
-const QuestionToggle: React.FC<QuestionToggleProps> = ({
-  question,
+const AnswerToggle: React.FC<AnswerToggleProps> = ({
   answers,
   onAnswerCorrect,
 }) => {
@@ -48,7 +45,6 @@ const QuestionToggle: React.FC<QuestionToggleProps> = ({
       className="question-toggle-container"
       style={{ backgroundColor: `rgba(0, 255, 0, ${correctness / 100})` }} // Update background color based on correctness
     >
-      <h3>{question}</h3>
       <div className="toggle-group">
         {answers.map((answer) => (
           <div
@@ -74,4 +70,4 @@ const QuestionToggle: React.FC<QuestionToggleProps> = ({
   );
 };
 
-export default QuestionToggle;
+export default AnswerToggle;
