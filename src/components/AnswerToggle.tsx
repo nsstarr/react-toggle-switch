@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useCorrectness } from "../context/CorrrectnessContext";
 
 interface AnswerOption {
   id: number;
@@ -9,34 +8,29 @@ interface AnswerOption {
 
 interface AnswerToggleProps {
   answers: AnswerOption[];
-  onAnswerCorrect: () => void; // Callback when the correct answer is selected
+  onAnswerChange: (isCorrect: boolean) => void;
+  isLocked: boolean; // Prop to determine if this answer is locked
 }
 
 const AnswerToggle: React.FC<AnswerToggleProps> = ({
   answers,
-  onAnswerCorrect,
+  onAnswerChange,
+  isLocked,
 }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null); // Track selected answer
-  const [isLocked, setIsLocked] = useState(false); // Track if the answer is locked
-
-  const { setCorrectness } = useCorrectness(); // Get the setCorrectness function from context
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   useEffect(() => {
     if (selectedAnswer !== null) {
       const isCorrect = answers.find(
         (answer) => answer.id === selectedAnswer
       )?.correct;
-      if (isCorrect) {
-        setCorrectness((prev: number) => prev + 25); // Update correctness via context
-        setIsLocked(true); // Lock the answer once correct
-        onAnswerCorrect(); // Notify parent of correct answer
-      }
+      onAnswerChange(isCorrect || false); // Notify parent if the answer is correct or incorrect
     }
-  }, [selectedAnswer]);
+  }, [selectedAnswer, answers, onAnswerChange]);
 
   const handleSelect = (answerId: number) => {
-    if (!isLocked) {
-      setSelectedAnswer(answerId);
+    if (!isLocked && selectedAnswer !== answerId) {
+      setSelectedAnswer(answerId); // Update selected answer only if it's not already selected
     }
   };
 
@@ -62,7 +56,6 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
           </div>
         ))}
       </div>
-      {isLocked && <p>Correct answer selected! The question is now locked.</p>}
     </div>
   );
 };

@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import AnswerToggle from "./AnswerToggle";
-import {
-  useCorrectness,
-} from "../context/CorrrectnessContext";
+import { useCorrectness } from "../context/CorrrectnessContext";
 
 interface AnswerOption {
   id: number;
@@ -16,10 +14,44 @@ interface QuizQuestionProps {
 }
 
 const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, answers }) => {
-  const { correctness } = useCorrectness();
+  const { correctness, setCorrectness } = useCorrectness();
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+  const [lockedAnswers, setLockedAnswers] = useState<number[]>([]);
+
+  const totalCorrectAnswers = answers.filter((answer) => answer.correct).length;
+
+  const handleAnswerChange = (isCorrect: boolean, answerId: number) => {
+    // Prevent duplicate updates if the answer is already selected
+    if (selectedAnswers.includes(answerId)) {
+      return;
+    }
+
+    setSelectedAnswers((prev) => [...prev, answerId]);
+
+    // Update locked answers if the answer is incorrect
+    if (!isCorrect) {
+      setLockedAnswers((prev) => [...prev, answerId]);
+    }
+
+    // Calculate correctness percentage based on correct answers
+    const correctCount = selectedAnswers.filter(
+      (id) => answers.find((answer) => answer.id === id)?.correct
+    ).length;
+
+    // Add the current answer to the count
+    const updatedCorrectCount = isCorrect ? correctCount + 1 : correctCount;
+
+    // Correctness percentage based on correct answers only
+    const correctnessPercentage =
+      totalCorrectAnswers > 0
+        ? (updatedCorrectCount / totalCorrectAnswers) * 100
+        : 0;
+
+    setCorrectness(correctnessPercentage);
+  };
 
   const getBackgroundGradient = () => {
-    switch (correctness) {
+    switch (Math.round(correctness)) {
       case 100:
         return "bg-gradient-to-b from-[#76E0C2] to-[#59CADA]";
       case 75:
@@ -29,7 +61,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, answers }) => {
       case 25:
         return "bg-gradient-to-b from-[#F6B868] to-[#EE6B2D]";
       default:
-        return "bg-gradient-to-b from-white to-slate-200"; // No gradient for 0% correctness
+        return "bg-gradient-to-b from-white to-slate-200";
     }
   };
 
@@ -40,7 +72,10 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, answers }) => {
         <AnswerToggle
           key={answer.id}
           answers={answers}
-          onAnswerCorrect={() => {}}
+          onAnswerChange={(isCorrect) =>
+            handleAnswerChange(isCorrect, answer.id)
+          }
+          isLocked={lockedAnswers.includes(answer.id)}
         />
       ))}
     </div>
