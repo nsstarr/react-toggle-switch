@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AnswerToggle from "./AnswerToggle";
 import { useCorrectness } from "../context/CorrrectnessContext";
 
@@ -25,6 +25,17 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     .flat()
     .filter((answer) => answer.correct).length;
 
+  useEffect(() => {
+    const correctCount = selectedAnswers.filter(
+      (id) => groupedAnswers.flat().find((answer) => answer.id === id)?.correct
+    ).length;
+
+    const correctnessPercentage =
+      totalCorrectAnswers > 0 ? (correctCount / totalCorrectAnswers) * 100 : 0;
+
+    setCorrectness(correctnessPercentage);
+  }, [selectedAnswers, groupedAnswers, totalCorrectAnswers, setCorrectness]);
+
   const handleAnswerChange = (isCorrect: boolean, answerId: number) => {
     if (selectedAnswers.includes(answerId)) {
       return;
@@ -35,23 +46,10 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       setLockedAnswers((prev) => [...prev, answerId]);
     }
 
-    setSelectedAnswers((prevSelectedAnswers) => {
-      const updatedSelectedAnswers = [...prevSelectedAnswers, answerId];
-
-      const correctCount = updatedSelectedAnswers.filter(
-        (id) =>
-          groupedAnswers.flat().find((answer) => answer.id === id)?.correct
-      ).length;
-
-      const correctnessPercentage =
-        totalCorrectAnswers > 0
-          ? (correctCount / totalCorrectAnswers) * 100
-          : 0;
-
-      console.log(correctnessPercentage);
-      setCorrectness(correctnessPercentage);
-      return updatedSelectedAnswers;
-    });
+    setSelectedAnswers((prevSelectedAnswers) => [
+      ...prevSelectedAnswers,
+      answerId,
+    ]);
   };
 
   const getBackgroundGradient = () => {
