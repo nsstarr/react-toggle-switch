@@ -9,6 +9,9 @@ export default {
         "gradient-50": "linear-gradient(to bottom, #F1B496, #EA806A)", // 50% correct
         "gradient-25": "linear-gradient(to bottom, #F6B868, #EE6B2D)", // 25% correct
       },
+      fontFamily: {
+        display: ["Mulish", "sans-serif"],
+      },
     },
   },
   plugins: [],

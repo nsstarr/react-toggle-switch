@@ -24,7 +24,7 @@ const App: React.FC = () => {
     ],
   ];
   return (
-    <div className="App">
+    <div className="font-display">
       <CorrectnessProvider>
         <QuizQuestion question={question} groupedAnswers={groupedAnswers} />
       </CorrectnessProvider>
