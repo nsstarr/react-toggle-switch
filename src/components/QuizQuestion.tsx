@@ -44,15 +44,15 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   const getBackgroundGradient = () => {
     switch (Math.round(correctness)) {
       case 100:
-        return "bg-gradient-to-b from-[#76E0C2] to-[#59CADA]";
+        return "bg-gradient-correct";
       case 75:
-        return "bg-gradient-to-b from-[#F9E878] to-[#D3972E]";
+        return "bg-gradient-75";
       case 50:
-        return "bg-gradient-to-b from-[#F1B496] to-[#EA806A]";
+        return "bg-gradient-50";
       case 25:
-        return "bg-gradient-to-b from-[#F6B868] to-[#EE6B2D]";
+        return "bg-gradient-25";
       default:
-        return "bg-gradient-to-b from-white to-slate-200";
+        return "bg-gradient-default";
     }
   };
 
