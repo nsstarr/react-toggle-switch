@@ -1,22 +1,19 @@
 import React, { useState } from "react";
-import QuestionToggle from "./QuestionToggle";
+import QuestionToggle from "./AnswerToggle";
+import { CorrectnessProvider } from "../context/CorrrectnessContext";
 
 interface AnswerOption {
   id: number;
   label: string;
   correct: boolean;
 }
-// Import the QuestionToggle component
 
 interface QuizQuestionProps {
   question: string;
   answers: AnswerOption[];
 }
 
-const QuizQuestion: React.FC<QuizQuestionProps> = ({
-  question,
-  answers,
-}) => {
+const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, answers }) => {
   const [correctnessCount, setCorrectnessCount] = useState(0); // Track how many questions are correctly answered and locked
 
   // Callback when a question is correctly answered
@@ -25,17 +22,19 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   };
 
   return (
-    <div>
-      <h1>{question}</h1>
-      {/* Loop over the questions and render QuestionToggle for each */}
-      {answers.map((answer) => (
-        <QuestionToggle
-          key={answer.id}
-          answers={answers}
-          onAnswerCorrect={handleAnswerCorrect}
-        />
-      ))}
-    </div>
+    <CorrectnessProvider>
+      <div>
+        <h1>{question}</h1>
+        {/* Loop over the questions and render QuestionToggle for each */}
+        {answers.map((answer) => (
+          <QuestionToggle
+            key={answer.id}
+            answers={answers}
+            onAnswerCorrect={handleAnswerCorrect}
+          />
+        ))}
+      </div>
+    </CorrectnessProvider>
   );
 };
 

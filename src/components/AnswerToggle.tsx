@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useCorrectness } from "../context/CorrrectnessContext";
 
 interface AnswerOption {
   id: number;
@@ -16,7 +17,8 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
 }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null); // Track selected answer
   const [isLocked, setIsLocked] = useState(false); // Track if the answer is locked
-  const [correctness, setCorrectness] = useState(0); // Correctness (0% or 100%)
+
+  const { correctness, setCorrectness } = useCorrectness();
 
   useEffect(() => {
     if (selectedAnswer !== null) {
@@ -24,14 +26,12 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
         (answer) => answer.id === selectedAnswer
       )?.correct;
       if (isCorrect) {
-        setCorrectness(100);
-        setIsLocked(true); // Lock the answers once correct
+        setCorrectness((prev: number) => prev + 25);
+        setIsLocked(true); 
         onAnswerCorrect(); // Notify parent of correct answer
-      } else {
-        setCorrectness(0); // Reset if wrong
-      }
+      } 
     }
-  }, [selectedAnswer, answers, onAnswerCorrect]);
+  }, [selectedAnswer, answers, setCorrectness, onAnswerCorrect]);
 
   // Handle when the user selects an answer
   const handleSelect = (answerId: number) => {
@@ -58,7 +58,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
                 type="checkbox"
                 checked={selectedAnswer === answer.id}
                 onChange={() => handleSelect(answer.id)}
-                disabled={isLocked} // Lock if correct answer is selected
+                disabled={isLocked} 
               />
               {answer.label}
             </label>
