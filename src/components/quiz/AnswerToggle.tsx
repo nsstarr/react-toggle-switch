@@ -58,14 +58,14 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
 
   return (
     <fieldset
-      className="question-toggle-container my-5 flex flex-col items-center justify-center"
+      className="mx-auto my-5 flex max-w-screen-md flex-col items-center justify-center"
       aria-labelledby="answer-toggle-group"
     >
       <legend id="answer-toggle-group" className="sr-only">
         Select your answer
       </legend>
 
-      <div className="relative flex h-12 w-full max-w-lg items-center rounded-full border border-white p-5 shadow-inner">
+      <div className="relative flex h-12 w-full items-center rounded-full border border-white p-5 shadow-inner">
         {/* Slider for the selected answer */}
         <div
           className="absolute left-0 top-0 h-full rounded-full bg-white/50 shadow-lg transition-transform duration-300 ease-in-out"
@@ -94,7 +94,9 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
             />
             <span
               className={`block font-semibold transition-colors ${
-                selectedAnswer === answer.id ? getCorrectScoreTextColor() : "text-white"
+                selectedAnswer === answer.id
+                  ? getCorrectScoreTextColor()
+                  : "text-white"
               }`}
             >
               {answer.label}

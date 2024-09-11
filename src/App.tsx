@@ -25,9 +25,11 @@ const App: React.FC = () => {
   ];
   return (
     <div className="font-display">
-      <CorrectnessProvider>
-        <QuizQuestion question={question} groupedAnswers={groupedAnswers} />
-      </CorrectnessProvider>
+      <section className="flex h-full w-full">
+        <CorrectnessProvider>
+          <QuizQuestion question={question} groupedAnswers={groupedAnswers} />
+        </CorrectnessProvider>
+      </section>
     </div>
   );
 };

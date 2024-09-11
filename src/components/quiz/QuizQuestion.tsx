@@ -57,11 +57,11 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
   return (
     <section
-      className={`w-full h-full ${getBackgroundGradient()}`}
+      className={`h-screen w-full mx-auto p-20 ${getBackgroundGradient()}`}
       aria-labelledby="quiz-question"
     >
-      <header>
-        <h1 id="quiz-question" className="text-3xl font-bold text-white">
+      <header className="text-center">
+        <h1 id="quiz-question" className="text-4xl font-bold text-white">
           {question}
         </h1>
       </header>
@@ -87,7 +87,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         <div
           id="feedback"
           aria-live="polite"
-          className="mt-4 text-3xl font-bold text-white"
+          className="mt-4 text-center text-3xl font-bold text-white"
         >
           {correctnessFeedback}
         </div>
