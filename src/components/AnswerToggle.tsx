@@ -8,8 +8,8 @@ interface AnswerOption {
 
 interface AnswerToggleProps {
   answers: AnswerOption[];
-  onAnswerChange: (isCorrect: boolean) => void;
-  isLocked: boolean; // Prop to determine if this answer is locked
+  onAnswerChange: (isCorrect: boolean, answerId: number) => void;
+  isLocked: (answerId: number) => boolean; // Prop to determine if this answer is locked
 }
 
 const AnswerToggle: React.FC<AnswerToggleProps> = ({
@@ -24,12 +24,12 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
       const isCorrect = answers.find(
         (answer) => answer.id === selectedAnswer
       )?.correct;
-      onAnswerChange(isCorrect || false); // Notify parent if the answer is correct or incorrect
+      onAnswerChange(isCorrect || false, selectedAnswer); // Notify parent if the answer is correct or incorrect
     }
   }, [selectedAnswer, answers, onAnswerChange]);
 
   const handleSelect = (answerId: number) => {
-    if (!isLocked) {
+    if (!isLocked(answerId)) {
       setSelectedAnswer(answerId); // Update selected answer only if not locked
     }
   };
@@ -49,7 +49,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
                 type="checkbox"
                 checked={selectedAnswer === answer.id}
                 onChange={() => handleSelect(answer.id)}
-                disabled={isLocked} // Disable if locked
+                disabled={isLocked(answer.id)} // Disable only if locked
               />
               {answer.label}
             </label>

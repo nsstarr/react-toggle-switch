@@ -30,7 +30,11 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       return;
     }
 
-    setLockedAnswers((prev) => [...prev, answerId]);
+    if (isCorrect) {
+      // Lock only the correct answer
+      setLockedAnswers((prev) => [...prev, answerId]);
+    }
+
     setSelectedAnswers((prevSelectedAnswers) => {
       const updatedSelectedAnswers = [...prevSelectedAnswers, answerId];
 
@@ -44,6 +48,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
           ? (correctCount / totalCorrectAnswers) * 100
           : 0;
 
+      console.log(correctnessPercentage);
       setCorrectness(correctnessPercentage);
       return updatedSelectedAnswers;
     });
@@ -71,10 +76,10 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         <AnswerToggle
           key={index}
           answers={answers} // Pass grouped answers to each AnswerToggle
-          onAnswerChange={(isCorrect) =>
-            handleAnswerChange(isCorrect, answers[0].id)
+          onAnswerChange={(isCorrect, answerId) =>
+            handleAnswerChange(isCorrect, answerId)
           }
-          isLocked={lockedAnswers.includes(answers[0].id)}
+          isLocked={(answerId: number) => lockedAnswers.includes(answerId)} // Only lock the correct answer
         />
       ))}
     </div>
