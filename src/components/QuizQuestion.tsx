@@ -20,6 +20,9 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   const { correctness, setCorrectness } = useCorrectness();
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [lockedAnswers, setLockedAnswers] = useState<number[]>([]);
+  const [correctnessFeedback, setCorrectnessFeedback] = useState<string | null>(
+    null
+  );
 
   const totalCorrectAnswers = groupedAnswers
     .flat()
@@ -40,6 +43,9 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     if (selectedAnswers.includes(answerId)) {
       return;
     }
+    setCorrectnessFeedback(
+      isCorrect ? "The answer is correct!" : "The answer is incorrect"
+    );
 
     if (isCorrect) {
       // Lock only the correct answer
@@ -80,6 +86,11 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
           isLocked={(answerId: number) => lockedAnswers.includes(answerId)} // Only lock the correct answer
         />
       ))}
+      {correctnessFeedback && (
+        <h2 className="mt-4 text-3xl font-bold text-white">
+          {correctnessFeedback}
+        </h2>
+      )}
     </div>
   );
 };
