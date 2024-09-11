@@ -18,18 +18,24 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   isLocked,
 }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [groupLocked, setGroupLocked] = useState(false); // New state to lock the entire group
 
   useEffect(() => {
     if (selectedAnswer !== null) {
       const isCorrect = answers.find(
         (answer) => answer.id === selectedAnswer
       )?.correct;
+
+      if (isCorrect) {
+        setGroupLocked(true); // Lock the entire group if the correct answer is selected
+      }
+
       onAnswerChange(isCorrect || false, selectedAnswer); // Notify parent if the answer is correct or incorrect
     }
   }, [selectedAnswer, answers, onAnswerChange]);
 
   const handleSelect = (answerId: number) => {
-    if (!isLocked(answerId)) {
+    if (!groupLocked && !isLocked(answerId)) {
       setSelectedAnswer(answerId); // Update selected answer only if not locked
     }
   };
@@ -49,7 +55,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
                 type="checkbox"
                 checked={selectedAnswer === answer.id}
                 onChange={() => handleSelect(answer.id)}
-                disabled={isLocked(answer.id)} // Disable only if locked
+                disabled={groupLocked || isLocked(answer.id)} // Disable the whole group if the correct answer is selected
               />
               {answer.label}
             </label>
