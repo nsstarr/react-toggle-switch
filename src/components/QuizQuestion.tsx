@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import AnswerToggle from "./AnswerToggle";
 import { useCorrectness } from "../context/CorrrectnessContext";
+import useCorrectnessCalculation from "../hooks/useCorrectnessCalculations";
+import useAnswerState from "../hooks/useAnswerState";
 
 interface AnswerOption {
   id: number;
@@ -18,45 +20,26 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   groupedAnswers,
 }) => {
   const { correctness, setCorrectness } = useCorrectness();
-  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-  const [lockedAnswers, setLockedAnswers] = useState<number[]>([]);
-  const [correctnessFeedback, setCorrectnessFeedback] = useState<string | null>(
-    null
-  );
 
   const totalCorrectAnswers = groupedAnswers
     .flat()
     .filter((answer) => answer.correct).length;
 
-  useEffect(() => {
-    const correctCount = selectedAnswers.filter(
-      (id) => groupedAnswers.flat().find((answer) => answer.id === id)?.correct
-    ).length;
+  // Use custom hook for managing selected and locked answers
+  const {
+    selectedAnswers,
+    lockedAnswers,
+    correctnessFeedback,
+    handleAnswerChange,
+  } = useAnswerState();
 
-    const correctnessPercentage =
-      totalCorrectAnswers > 0 ? (correctCount / totalCorrectAnswers) * 100 : 0;
-
-    setCorrectness(correctnessPercentage);
-  }, [selectedAnswers, groupedAnswers, totalCorrectAnswers, setCorrectness]);
-
-  const handleAnswerChange = (isCorrect: boolean, answerId: number) => {
-    if (selectedAnswers.includes(answerId)) {
-      return;
-    }
-    setCorrectnessFeedback(
-      isCorrect ? "The answer is correct!" : "The answer is incorrect"
-    );
-
-    if (isCorrect) {
-      // Lock only the correct answer
-      setLockedAnswers((prev) => [...prev, answerId]);
-    }
-
-    setSelectedAnswers((prevSelectedAnswers) => [
-      ...prevSelectedAnswers,
-      answerId,
-    ]);
-  };
+  // Use custom hook for correctness calculation
+  useCorrectnessCalculation({
+    selectedAnswers,
+    groupedAnswers,
+    totalCorrectAnswers,
+    setCorrectness,
+  });
 
   const getBackgroundGradient = () => {
     switch (Math.round(correctness)) {
