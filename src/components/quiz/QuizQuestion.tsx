@@ -52,48 +52,48 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       case 25:
         return "bg-gradient-25";
       default:
-        return "bg-gradient-default";
+        return "bg-gradient-25";
     }
   };
 
-return (
-  <section
-    className={`w-full h-full ${getBackgroundGradient()}`}
-    aria-labelledby="quiz-question"
-  >
-    <header>
-      <h1 id="quiz-question" className="text-3xl font-bold text-white">
-        {question}
-      </h1>
-    </header>
+  return (
+    <section
+      className={`w-full h-full ${getBackgroundGradient()}`}
+      aria-labelledby="quiz-question"
+    >
+      <header>
+        <h1 id="quiz-question" className="text-3xl font-bold text-white">
+          {question}
+        </h1>
+      </header>
 
-    {/* Answer toggles */}
-    <fieldset aria-describedby="feedback" className="mt-6">
-      <legend className="sr-only">Answer the following question</legend>
-      {groupedAnswers.map((answers, index) => (
-        <AnswerToggle
-          key={index}
-          answers={answers}
-          onAnswerChange={(isCorrect, answerId) =>
-            handleAnswerChange(isCorrect, answerId)
-          }
-          isLocked={(answerId: number) => lockedAnswers.includes(answerId)}
-        />
-      ))}
-    </fieldset>
+      {/* Answer toggles */}
+      <fieldset aria-describedby="feedback" className="mt-6">
+        <legend className="sr-only">Answer the following question</legend>
+        {groupedAnswers.map((answers, index) => (
+          <AnswerToggle
+            key={index}
+            answers={answers}
+            onAnswerChange={(isCorrect, answerId) =>
+              handleAnswerChange(isCorrect, answerId)
+            }
+            isLocked={(answerId: number) => lockedAnswers.includes(answerId)}
+          />
+        ))}
+      </fieldset>
 
-    {/* Feedback for correctness */}
-    {correctnessFeedback && (
-      <div
-        id="feedback"
-        aria-live="polite"
-        className="mt-4 text-3xl font-bold text-white"
-      >
-        {correctnessFeedback}
-      </div>
-    )}
-  </section>
-);
+      {/* Feedback for correctness */}
+      {correctnessFeedback && (
+        <div
+          id="feedback"
+          aria-live="polite"
+          className="mt-4 text-3xl font-bold text-white"
+        >
+          {correctnessFeedback}
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default QuizQuestion;
