@@ -12,7 +12,7 @@ interface AnswerOption {
 
 interface QuizQuestionProps {
   question: string;
-  groupedAnswers: AnswerOption[][]; // Accept grouped answers (4 sets)
+  groupedAnswers: AnswerOption[][]; // Accept grouped answers
 }
 
 const QuizQuestion: React.FC<QuizQuestionProps> = ({
@@ -25,7 +25,6 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     .flat()
     .filter((answer) => answer.correct).length;
 
-  // Use custom hook for managing selected and locked answers
   const {
     selectedAnswers,
     lockedAnswers,
@@ -74,6 +73,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
           <AnswerToggle
             key={index}
             answers={answers}
+            correctnessScore={correctness}
             onAnswerChange={(isCorrect, answerId) =>
               handleAnswerChange(isCorrect, answerId)
             }

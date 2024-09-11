@@ -9,16 +9,18 @@ interface AnswerOption {
 interface AnswerToggleProps {
   answers: AnswerOption[];
   onAnswerChange: (isCorrect: boolean, answerId: number) => void;
-  isLocked: (answerId: number) => boolean; // Prop to determine if this answer is locked
+  isLocked: (answerId: number) => boolean;
+  correctnessScore: number;
 }
 
 const AnswerToggle: React.FC<AnswerToggleProps> = ({
   answers,
   onAnswerChange,
   isLocked,
+  correctnessScore,
 }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [groupLocked, setGroupLocked] = useState(false); // New state to lock the entire group
+  const [groupLocked, setGroupLocked] = useState(false);
 
   useEffect(() => {
     if (selectedAnswer !== null) {
@@ -30,13 +32,27 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
         setGroupLocked(true); // Lock the entire group if the correct answer is selected
       }
 
-      onAnswerChange(isCorrect || false, selectedAnswer); // Notify parent if the answer is correct or incorrect
+      onAnswerChange(isCorrect || false, selectedAnswer);
     }
   }, [selectedAnswer, answers, onAnswerChange]);
 
   const handleSelect = (answerId: number) => {
     if (!groupLocked && !isLocked(answerId)) {
-      setSelectedAnswer(answerId); // Update selected answer only if not locked
+      setSelectedAnswer(answerId);
+    }
+  };
+
+  const getCorrectScoreTextColor = () => {
+    switch (Math.round(correctnessScore)) {
+      case 100:
+        return "text-[#4CAD94]";
+      case 75:
+        return "text-[#9F938B]";
+      case 50:
+        return "text-[#E47958]";
+      case 25:
+      case 0:
+        return "text-[#9F938B]";
     }
   };
 
@@ -49,11 +65,12 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
         Select your answer
       </legend>
 
-      <div className="relative flex h-12 w-full max-w-lg items-center rounded-full border-2 border-white p-5">
+      <div className="relative flex h-12 w-full max-w-lg items-center rounded-full border border-white p-5 shadow-inner">
+        {/* Slider for the selected answer */}
         <div
-          className="absolute left-0 top-0 h-full rounded-full bg-white/50 shadow-md transition-transform duration-300 ease-in-out"
+          className="absolute left-0 top-0 h-full rounded-full bg-white/50 shadow-lg transition-transform duration-300 ease-in-out"
           style={{
-            width: "50%",
+            width: `${100 / answers.length}%`,
             transform: `translateX(${
               selectedAnswer === answers[1]?.id ? "100%" : "0%"
             })`,
@@ -77,7 +94,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
             />
             <span
               className={`block font-semibold transition-colors ${
-                selectedAnswer === answer.id ? "text-white" : "text-gray-900"
+                selectedAnswer === answer.id ? getCorrectScoreTextColor() : "text-white"
               }`}
             >
               {answer.label}
