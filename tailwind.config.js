@@ -8,7 +8,7 @@ export default {
         "gradient-75": "linear-gradient(to bottom, #F9E878, #D3972E)", // 75% correct
         "gradient-50": "linear-gradient(to bottom, #F1B496, #EA806A)", // 50% correct
         "gradient-25": "linear-gradient(to bottom, #F6B868, #EE6B2D)", // 25% correct
-        "gradient-default": "linear-gradient(to bottom, #ffffff, #e2e8f0)", // Default gradient
+        "gradient-default": "linear-gradient(to bottom, #000000, #e2e8f0)", // Default gradient
       },
     },
   },

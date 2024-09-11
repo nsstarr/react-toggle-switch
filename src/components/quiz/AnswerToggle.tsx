@@ -41,7 +41,13 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   };
 
   return (
-    <div className="question-toggle-container my-5 flex flex-col items-center justify-center">
+    <fieldset
+      className="question-toggle-container my-5 flex flex-col items-center justify-center"
+      aria-labelledby="answer-toggle-group"
+    >
+      <legend id="answer-toggle-group" className="sr-only">
+        Select your answer
+      </legend>
       <div className="toggle-group">
         {answers.map((answer) => (
           <div
@@ -55,14 +61,16 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
                 type="checkbox"
                 checked={selectedAnswer === answer.id}
                 onChange={() => handleSelect(answer.id)}
-                disabled={groupLocked || isLocked(answer.id)} // Disable the whole group if the correct answer is selected
+                disabled={groupLocked || isLocked(answer.id)}
+                aria-checked={selectedAnswer === answer.id} 
+                aria-label={`Answer option: ${answer.label}`} 
               />
               {answer.label}
             </label>
           </div>
         ))}
       </div>
-    </div>
+    </fieldset>
   );
 };
 

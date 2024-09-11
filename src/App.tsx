@@ -1,6 +1,6 @@
 import React from "react";
 import { CorrectnessProvider } from "./context/CorrrectnessContext";
-import QuizQuestion from "./components/QuizQuestion";
+import QuizQuestion from "./components/quiz/QuizQuestion";
 
 const App: React.FC = () => {
   const question = "Select the correct answers for the following:";
