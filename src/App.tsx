@@ -1,5 +1,4 @@
 import React from "react";
-import QuestionToggle from "./components/AnswerToggle";
 import QuizQuestion from "./components/QuizQuestion";
 
 const App: React.FC = () => {

@@ -7,7 +7,7 @@ interface AnswerOption {
   correct: boolean;
 }
 interface AnswerToggleProps {
-  answers: AnswerOption[]; // A single list of answers (instead of groups)
+  answers: AnswerOption[]; 
   onAnswerCorrect: () => void; // Callback when the correct answer is selected
 }
 
