@@ -10,44 +10,43 @@ interface AnswerOption {
 
 interface QuizQuestionProps {
   question: string;
-  answers: AnswerOption[];
+  groupedAnswers: AnswerOption[][]; // Accept grouped answers (4 sets)
 }
 
-const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, answers }) => {
+const QuizQuestion: React.FC<QuizQuestionProps> = ({
+  question,
+  groupedAnswers,
+}) => {
   const { correctness, setCorrectness } = useCorrectness();
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [lockedAnswers, setLockedAnswers] = useState<number[]>([]);
 
-  const totalCorrectAnswers = answers.filter((answer) => answer.correct).length;
+  const totalCorrectAnswers = groupedAnswers
+    .flat()
+    .filter((answer) => answer.correct).length;
 
   const handleAnswerChange = (isCorrect: boolean, answerId: number) => {
-    // Prevent duplicate updates if the answer is already selected
     if (selectedAnswers.includes(answerId)) {
       return;
     }
 
-    setSelectedAnswers((prev) => [...prev, answerId]);
+    setLockedAnswers((prev) => [...prev, answerId]);
+    setSelectedAnswers((prevSelectedAnswers) => {
+      const updatedSelectedAnswers = [...prevSelectedAnswers, answerId];
 
-    // Update locked answers if the answer is incorrect
-    if (!isCorrect) {
-      setLockedAnswers((prev) => [...prev, answerId]);
-    }
+      const correctCount = updatedSelectedAnswers.filter(
+        (id) =>
+          groupedAnswers.flat().find((answer) => answer.id === id)?.correct
+      ).length;
 
-    // Calculate correctness percentage based on correct answers
-    const correctCount = selectedAnswers.filter(
-      (id) => answers.find((answer) => answer.id === id)?.correct
-    ).length;
+      const correctnessPercentage =
+        totalCorrectAnswers > 0
+          ? (correctCount / totalCorrectAnswers) * 100
+          : 0;
 
-    // Add the current answer to the count
-    const updatedCorrectCount = isCorrect ? correctCount + 1 : correctCount;
-
-    // Correctness percentage based on correct answers only
-    const correctnessPercentage =
-      totalCorrectAnswers > 0
-        ? (updatedCorrectCount / totalCorrectAnswers) * 100
-        : 0;
-
-    setCorrectness(correctnessPercentage);
+      setCorrectness(correctnessPercentage);
+      return updatedSelectedAnswers;
+    });
   };
 
   const getBackgroundGradient = () => {
@@ -68,14 +67,14 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, answers }) => {
   return (
     <div className={`w-full h-full ${getBackgroundGradient()}`}>
       <h1>{question}</h1>
-      {answers.map((answer) => (
+      {groupedAnswers.map((answers, index) => (
         <AnswerToggle
-          key={answer.id}
-          answers={answers}
+          key={index}
+          answers={answers} // Pass grouped answers to each AnswerToggle
           onAnswerChange={(isCorrect) =>
-            handleAnswerChange(isCorrect, answer.id)
+            handleAnswerChange(isCorrect, answers[0].id)
           }
-          isLocked={lockedAnswers.includes(answer.id)}
+          isLocked={lockedAnswers.includes(answers[0].id)}
         />
       ))}
     </div>

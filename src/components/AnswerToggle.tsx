@@ -29,13 +29,13 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   }, [selectedAnswer, answers, onAnswerChange]);
 
   const handleSelect = (answerId: number) => {
-    if (!isLocked && selectedAnswer !== answerId) {
-      setSelectedAnswer(answerId); // Update selected answer only if it's not already selected
+    if (!isLocked) {
+      setSelectedAnswer(answerId); // Update selected answer only if not locked
     }
   };
 
   return (
-    <div className="question-toggle-container">
+    <div className="question-toggle-container my-5 flex flex-col items-center justify-center">
       <div className="toggle-group">
         {answers.map((answer) => (
           <div
@@ -49,7 +49,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
                 type="checkbox"
                 checked={selectedAnswer === answer.id}
                 onChange={() => handleSelect(answer.id)}
-                disabled={isLocked}
+                disabled={isLocked} // Disable if locked
               />
               {answer.label}
             </label>
