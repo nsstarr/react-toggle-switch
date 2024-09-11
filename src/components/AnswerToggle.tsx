@@ -6,8 +6,9 @@ interface AnswerOption {
   label: string;
   correct: boolean;
 }
+
 interface AnswerToggleProps {
-  answers: AnswerOption[]; 
+  answers: AnswerOption[];
   onAnswerCorrect: () => void; // Callback when the correct answer is selected
 }
 
@@ -18,7 +19,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null); // Track selected answer
   const [isLocked, setIsLocked] = useState(false); // Track if the answer is locked
 
-  const { correctness, setCorrectness } = useCorrectness();
+  const { setCorrectness } = useCorrectness(); // Get the setCorrectness function from context
 
   useEffect(() => {
     if (selectedAnswer !== null) {
@@ -26,14 +27,13 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
         (answer) => answer.id === selectedAnswer
       )?.correct;
       if (isCorrect) {
-        setCorrectness((prev: number) => prev + 25);
-        setIsLocked(true); 
+        setCorrectness((prev: number) => prev + 25); // Update correctness via context
+        setIsLocked(true); // Lock the answer once correct
         onAnswerCorrect(); // Notify parent of correct answer
-      } 
+      }
     }
-  }, [selectedAnswer, answers, setCorrectness, onAnswerCorrect]);
+  }, [selectedAnswer]);
 
-  // Handle when the user selects an answer
   const handleSelect = (answerId: number) => {
     if (!isLocked) {
       setSelectedAnswer(answerId);
@@ -41,10 +41,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   };
 
   return (
-    <div
-      className="question-toggle-container"
-      style={{ backgroundColor: `rgba(0, 255, 0, ${correctness / 100})` }} // Update background color based on correctness
-    >
+    <div className="question-toggle-container">
       <div className="toggle-group">
         {answers.map((answer) => (
           <div
@@ -58,7 +55,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
                 type="checkbox"
                 checked={selectedAnswer === answer.id}
                 onChange={() => handleSelect(answer.id)}
-                disabled={isLocked} 
+                disabled={isLocked}
               />
               {answer.label}
             </label>

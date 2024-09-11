@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import QuestionToggle from "./AnswerToggle";
-import { CorrectnessProvider } from "../context/CorrrectnessContext";
+import React from "react";
+import AnswerToggle from "./AnswerToggle";
+import {
+  useCorrectness,
+} from "../context/CorrrectnessContext";
 
 interface AnswerOption {
   id: number;
@@ -14,27 +16,34 @@ interface QuizQuestionProps {
 }
 
 const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, answers }) => {
-  const [correctnessCount, setCorrectnessCount] = useState(0); // Track how many questions are correctly answered and locked
+  const { correctness } = useCorrectness();
 
-  // Callback when a question is correctly answered
-  const handleAnswerCorrect = () => {
-    setCorrectnessCount(correctnessCount + 1); // Increment the count when a question is locked with the correct answer
+  const getBackgroundGradient = () => {
+    switch (correctness) {
+      case 100:
+        return "bg-gradient-to-b from-[#76E0C2] to-[#59CADA]";
+      case 75:
+        return "bg-gradient-to-b from-[#F9E878] to-[#D3972E]";
+      case 50:
+        return "bg-gradient-to-b from-[#F1B496] to-[#EA806A]";
+      case 25:
+        return "bg-gradient-to-b from-[#F6B868] to-[#EE6B2D]";
+      default:
+        return "bg-gradient-to-b from-white to-slate-200"; // No gradient for 0% correctness
+    }
   };
 
   return (
-    <CorrectnessProvider>
-      <div>
-        <h1>{question}</h1>
-        {/* Loop over the questions and render QuestionToggle for each */}
-        {answers.map((answer) => (
-          <QuestionToggle
-            key={answer.id}
-            answers={answers}
-            onAnswerCorrect={handleAnswerCorrect}
-          />
-        ))}
-      </div>
-    </CorrectnessProvider>
+    <div className={`w-full h-full ${getBackgroundGradient()}`}>
+      <h1>{question}</h1>
+      {answers.map((answer) => (
+        <AnswerToggle
+          key={answer.id}
+          answers={answers}
+          onAnswerCorrect={() => {}}
+        />
+      ))}
+    </div>
   );
 };
 

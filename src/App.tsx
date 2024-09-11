@@ -1,4 +1,5 @@
 import React from "react";
+import { CorrectnessProvider } from "./context/CorrrectnessContext";
 import QuizQuestion from "./components/QuizQuestion";
 
 const App: React.FC = () => {
@@ -29,7 +30,9 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <QuizQuestion question={question} answers={answers} />
+      <CorrectnessProvider>
+        <QuizQuestion question={question} answers={answers} />
+      </CorrectnessProvider>
     </div>
   );
 };
