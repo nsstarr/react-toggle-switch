@@ -3,6 +3,7 @@ import AnswerToggle from "./AnswerToggle";
 import { useCorrectness } from "../../context/CorrrectnessContext";
 import useCorrectnessCalculation from "../../hooks/useCorrectnessCalculations";
 import useAnswerState from "../../hooks/useAnswerState";
+import useShuffledGroupedAnswers from "../../hooks/useShuffledAnswers";
 
 interface AnswerOption {
   id: number;
@@ -12,16 +13,23 @@ interface AnswerOption {
 
 interface QuizQuestionProps {
   question: string;
-  groupedAnswers: AnswerOption[][]; // Accept grouped answers
+  groupedAnswers: AnswerOption[][];
+  randomized?: boolean;
 }
 
 const QuizQuestion: React.FC<QuizQuestionProps> = ({
   question,
   groupedAnswers,
+  randomized = false,
 }) => {
   const { correctness, setCorrectness } = useCorrectness();
 
-  const totalCorrectAnswers = groupedAnswers
+  const shuffledGroupedAnswers = useShuffledGroupedAnswers(
+    groupedAnswers,
+    randomized
+  );
+
+  const totalCorrectAnswers = shuffledGroupedAnswers
     .flat()
     .filter((answer) => answer.correct).length;
 
@@ -32,10 +40,9 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     handleAnswerChange,
   } = useAnswerState();
 
-  // Use custom hook for correctness calculation
   useCorrectnessCalculation({
     selectedAnswers,
-    groupedAnswers,
+    groupedAnswers: shuffledGroupedAnswers,
     totalCorrectAnswers,
     setCorrectness,
   });
@@ -72,7 +79,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       {/* Answer toggles */}
       <fieldset aria-describedby="feedback" className="mt-6">
         <legend className="sr-only">Answer the following question</legend>
-        {groupedAnswers.map((answers, index) => (
+        {shuffledGroupedAnswers.map((answers, index) => (
           <AnswerToggle
             key={index}
             answers={answers}
