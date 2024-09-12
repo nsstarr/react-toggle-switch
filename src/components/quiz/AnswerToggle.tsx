@@ -21,6 +21,26 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
 }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [groupLocked, setGroupLocked] = useState(false);
+  const [isWrapped, setIsWrapped] = useState(false);
+
+
+  useEffect(() => {
+    const checkIsWrapped = () => {
+      if (window.matchMedia("(max-width: 640px)").matches) {
+        setIsWrapped(answers.some((answer) => answer.label.length > 9));
+      } else {
+        setIsWrapped(false);
+      }
+    };
+
+    checkIsWrapped();
+    window.addEventListener("resize", checkIsWrapped);
+
+    return () => {
+      window.removeEventListener("resize", checkIsWrapped);
+    };
+  }, [answers]);
+  
 
   useEffect(() => {
     if (selectedAnswer !== null) {
@@ -53,6 +73,8 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
       case 25:
       case 0:
         return "text-[#9F938B]";
+      default:
+        return "text-white";
     }
   };
 
@@ -65,15 +87,29 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
         Select your answer
       </legend>
 
-      <div className="relative flex w-full flex-wrap items-center rounded-full border border-white px-3 py-2 shadow-inner md:flex-row md:flex-nowrap md:px-5 md:py-3">
+      <div
+        className="relative flex w-full items-center rounded-full border border-white px-3 py-2 shadow-inner md:px-5 md:py-3"
+        style={{ 
+          
+          flexDirection: isWrapped ? "column" : "row",
+          borderRadius: isWrapped ? "30px" : "9999px",
+
+          
+         }} 
+      >
         {/* Slider for the selected answer */}
         <div
-          className="absolute left-0 top-0 h-full rounded-full bg-white/50 shadow-lg transition-transform duration-300 ease-in-out"
+          className="absolute left-0 top-0 rounded-full bg-white/50 shadow-lg transition-transform duration-300 ease-in-out"
           style={{
-            width: `${100 / answers.length}%`,
-            transform: `translateX(${
-              selectedAnswer === answers[1]?.id ? "100%" : "0%"
-            })`,
+            width: isWrapped ? "100%" : `${100 / answers.length}%`, // Full width in wrapped mode
+            height: isWrapped ? `${100 / answers.length}%` : "100%", // Full height in wrapped mode
+            transform: isWrapped
+              ? `translateY(${
+                  selectedAnswer === answers[1]?.id ? "100%" : "0%"
+                })`
+              : `translateX(${
+                  selectedAnswer === answers[1]?.id ? "100%" : "0%"
+                })`, // Toggle vertically if wrapped
           }}
         ></div>
 
@@ -93,7 +129,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
               aria-label={`Answer option: ${answer.label}`}
             />
             <span
-              className={`block text-lg font-semibold md:text-2xl p-1.5 text-nowrap transition-colors break-words ${
+              className={`block text-lg text-nowrap font-semibold md:text-2xl p-1.5 transition-colors ${
                 selectedAnswer === answer.id
                   ? getCorrectScoreTextColor()
                   : "text-white"
