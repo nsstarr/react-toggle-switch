@@ -11,6 +11,7 @@ export default {
         incorrect: "#9F938B",
         halfCorrect: "#E47958",
         nearlyCorrect: "#9F938B",
+        bottomPanel: "#EE6B2D",
       },
       backgroundImage: {
         "gradient-correct": "linear-gradient(to bottom, #76E0C2, #59CADA)", // 100% correct
