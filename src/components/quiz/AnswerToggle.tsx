@@ -23,7 +23,6 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   const [groupLocked, setGroupLocked] = useState(false);
   const [isWrapped, setIsWrapped] = useState(false);
 
-
   useEffect(() => {
     const checkIsWrapped = () => {
       if (window.matchMedia("(max-width: 640px)").matches) {
@@ -40,7 +39,6 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
       window.removeEventListener("resize", checkIsWrapped);
     };
   }, [answers]);
-  
 
   useEffect(() => {
     if (selectedAnswer !== null) {
@@ -65,16 +63,16 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   const getCorrectScoreTextColor = () => {
     switch (Math.round(correctnessScore)) {
       case 100:
-        return "text-[#4CAD94]";
+        return "text-correct";
       case 75:
-        return "text-[#9F938B]";
+        return "text-nearlyCorrect";
       case 50:
-        return "text-[#E47958]";
+        return "text-halfCorrect";
       case 25:
       case 0:
-        return "text-[#9F938B]";
+        return "text-incorrect";
       default:
-        return "text-white";
+        return "text-incorrect";
     }
   };
 
@@ -88,14 +86,11 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
       </legend>
 
       <div
-        className="relative flex w-full items-center rounded-full border border-white px-3 py-2 shadow-inner md:px-5 md:py-3"
-        style={{ 
-          
+        className="relative flex w-full items-center gap-2 rounded-full border border-white px-3 py-2 shadow-inner md:px-5 md:py-3"
+        style={{
           flexDirection: isWrapped ? "column" : "row",
           borderRadius: isWrapped ? "30px" : "9999px",
-
-          
-         }} 
+        }}
       >
         {/* Slider for the selected answer */}
         <div

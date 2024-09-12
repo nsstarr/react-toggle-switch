@@ -57,11 +57,14 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
   return (
     <section
-      className={`h-screen w-full mx-auto p-20 ${getBackgroundGradient()}`}
+      className={`h-screen w-full mx-auto px-4 py-8 md:p-20 ${getBackgroundGradient()}`}
       aria-labelledby="quiz-question"
     >
       <header className="text-center">
-        <h1 id="quiz-question" className="text-xl font-bold text-white lg:text-4xl">
+        <h1
+          id="quiz-question"
+          className="text-xl font-bold text-white lg:text-4xl"
+        >
           {question}
         </h1>
       </header>
