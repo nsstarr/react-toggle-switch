@@ -65,7 +65,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
         Select your answer
       </legend>
 
-      <div className="relative flex h-12 w-full items-center rounded-full border border-white p-5 shadow-inner">
+      <div className="relative flex w-full flex-wrap items-center rounded-full border border-white px-3 py-2 shadow-inner md:flex-row md:flex-nowrap md:px-5 md:py-3">
         {/* Slider for the selected answer */}
         <div
           className="absolute left-0 top-0 h-full rounded-full bg-white/50 shadow-lg transition-transform duration-300 ease-in-out"
@@ -93,7 +93,7 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
               aria-label={`Answer option: ${answer.label}`}
             />
             <span
-              className={`block font-semibold transition-colors ${
+              className={`block text-lg font-semibold md:text-2xl p-1.5 text-nowrap transition-colors break-words ${
                 selectedAnswer === answer.id
                   ? getCorrectScoreTextColor()
                   : "text-white"

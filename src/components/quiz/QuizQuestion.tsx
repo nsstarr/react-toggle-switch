@@ -61,7 +61,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       aria-labelledby="quiz-question"
     >
       <header className="text-center">
-        <h1 id="quiz-question" className="text-4xl font-bold text-white">
+        <h1 id="quiz-question" className="text-xl font-bold text-white lg:text-4xl">
           {question}
         </h1>
       </header>
@@ -87,7 +87,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         <div
           id="feedback"
           aria-live="polite"
-          className="mt-4 text-center text-3xl font-bold text-white"
+          className="mt-4 text-center text-base font-bold text-white lg:text-3xl"
         >
           {correctnessFeedback}
         </div>
