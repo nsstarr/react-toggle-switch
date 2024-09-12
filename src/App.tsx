@@ -1,80 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 import { CorrectnessProvider } from "./context/CorrrectnessContext";
 import QuizQuestion from "./components/quiz/QuizQuestion";
-import useShuffledQuestions from "./hooks/useShuffledQuestions";
-import quizQuestions from "./data";
+import quizQuestions from "./data"; 
+import QuizSlider from "./components/layouts/QuizSlider";
 
 const App: React.FC = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-  const randomized = true;
-  const shuffledQuestions = useShuffledQuestions(quizQuestions, randomized);
-
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < shuffledQuestions.length - 1) {
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-    }
-  };
-
-  const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
-    }
-  };
-
   return (
     <div className="font-display">
-      <section className="flex h-full w-full flex-col items-center justify-center">
-        <div className="relative w-full overflow-hidden">
-          {/* Quiz Question Slider */}
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${currentQuestionIndex * 100}%)`,
-            }}
-          >
-            {shuffledQuestions.map((quizQuestion, index) => (
-              <div key={index} className="w-full min-w-full flex-shrink-0">
-                <CorrectnessProvider>
-                  <QuizQuestion
-                    question={quizQuestion.question}
-                    groupedAnswers={quizQuestion.groupedAnswers}
-                    randomized={true}
-                  />
-                </CorrectnessProvider>
-              </div>
-            ))}
-          </div>
-        </div>
+      <CorrectnessProvider>
+        <QuizSlider>
+          <QuizQuestion
+            question={quizQuestions[0].question}
+            groupedAnswers={quizQuestions[0].groupedAnswers}
+            randomized={true}
+          />
 
-        {/*  Navigation Buttons */}
-        <div className="fixed bottom-0 w-full bg-slate-700 p-4">
-          <div className="mx-auto flex max-w-xl justify-between">
-            <button
-              onClick={handlePreviousQuestion}
-              className={`text-white md:text-2xl py-2 px-4 md:px-8 md:py-4 rounded-lg bg-gray-500 ${
-                currentQuestionIndex === 0
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-              disabled={currentQuestionIndex === 0}
-            >
-              Back
-            </button>
-            <button
-              onClick={handleNextQuestion}
-              className={`text-white py-2 px-4 md:text-2xl md:px-8 md:py-4 rounded-lg bg-bottomPanel ${
-                currentQuestionIndex === shuffledQuestions.length - 1
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-              disabled={currentQuestionIndex === shuffledQuestions.length - 1}
-            >
-              Next
-            </button>
+          <QuizQuestion
+            question={quizQuestions[1].question}
+            groupedAnswers={quizQuestions[1].groupedAnswers}
+            randomized={true}
+          />
+
+          <div className="mt-48 flex items-center justify-center text-2xl font-semibold text-bottomPanel">
+            <h2>Thank you for taking the quiz!</h2>
           </div>
-        </div>
-      </section>
+        </QuizSlider>
+      </CorrectnessProvider>
     </div>
   );
 };
