@@ -1,9 +1,9 @@
 import React from "react";
 import AnswerToggle from "./AnswerToggle";
 import { useCorrectness } from "../../context/CorrrectnessContext";
-import useCorrectnessCalculation from "../../hooks/useCorrectnessCalculations";
-import useAnswerState from "../../hooks/useAnswerState";
-import useShuffledGroupedAnswers from "../../hooks/useShuffledAnswers";
+import useCorrectnessCalculation from "../../hooks/quiz/useCorrectnessCalculations";
+import useAnswerState from "../../hooks/quiz/useAnswerState";
+import useShuffledGroupedAnswers from "../../hooks/quiz/useShuffledAnswers";
 
 interface AnswerOption {
   id: number;

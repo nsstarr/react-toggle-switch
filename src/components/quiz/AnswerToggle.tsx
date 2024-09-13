@@ -1,4 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import useIsWrapped from "../../hooks/quiz/useIsWrapped";
+import useAnswerSelection from "../../hooks/quiz/useAnswerSelection";
+
+const MAX_WIDTH_MOBILE = "640px";
+const RADIUS_WRAPPED = "30px";
+const RADIUS_UNWRAPPED = "9999px";
+const FIRST_ANSWER = 0;
+const SECOND_ANSWER = 100;
+const THIRD_ANSWER = 200;
+const NO_SELECTION = 0;
 
 interface AnswerOption {
   id: number;
@@ -19,49 +29,15 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   isLocked,
   correctnessScore,
 }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [groupLocked, setGroupLocked] = useState(false);
-  const [isWrapped, setIsWrapped] = useState(false);
+  const isWrapped = useIsWrapped(answers, MAX_WIDTH_MOBILE);
 
-  useEffect(() => {
-    const checkIsWrapped = () => {
-      if (window.matchMedia("(max-width: 640px)").matches) {
-        setIsWrapped(answers.some((answer) => answer.label.length > 9));
-      } else {
-        setIsWrapped(false);
-      }
-    };
+  const { selectedAnswer, handleSelect } = useAnswerSelection(
+    answers,
+    isLocked,
+    onAnswerChange
+  );
 
-    checkIsWrapped();
-    window.addEventListener("resize", checkIsWrapped);
-
-    return () => {
-      window.removeEventListener("resize", checkIsWrapped);
-    };
-  }, [answers]);
-
-  useEffect(() => {
-    if (selectedAnswer !== null) {
-      const isCorrect = answers.find(
-        (answer) => answer.id === selectedAnswer
-      )?.correct;
-
-      if (isCorrect) {
-        setGroupLocked(true); // Lock the entire group if the correct answer is selected
-      }
-
-      onAnswerChange(isCorrect || false, selectedAnswer);
-    }
-  }, [selectedAnswer, answers, onAnswerChange]);
-
-  // Handle answer selection
-  const handleSelect = (answerId: number) => {
-    if (!groupLocked && !isLocked(answerId)) {
-      setSelectedAnswer(answerId);
-    }
-  };
-
-  // Set color based on correctness score
+  // Color based on correctness score
   const getCorrectScoreTextColor = () => {
     switch (Math.round(correctnessScore)) {
       case 100:
@@ -84,16 +60,21 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
     (answer) => answer.id === selectedAnswer
   );
 
+  const twoAnswerToggle = selectedIndex * 100;
+  const threeAnswerToggle =
+    selectedIndex === 0
+      ? FIRST_ANSWER
+      : selectedIndex === 1
+      ? SECOND_ANSWER
+      : THIRD_ANSWER;
+
   const translatePercentage =
     selectedIndex === -1
-      ? 0
+      ? NO_SELECTION
       : answers.length === 2
-      ? selectedIndex * 100 // Two answers
-      : selectedIndex === 0
-      ? 0 // First answer 
-      : selectedIndex === 1
-      ? 100 // Second answer 
-      : 200; // Third answer 
+      ? twoAnswerToggle
+      : threeAnswerToggle;
+
   return (
     <fieldset
       className="mx-auto my-5 flex max-w-screen-md flex-col items-center justify-center"
@@ -107,18 +88,18 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
         className="relative flex w-full items-center gap-2 rounded-full border border-white px-3 py-2 shadow-inner md:px-5 md:py-3"
         style={{
           flexDirection: isWrapped ? "column" : "row",
-          borderRadius: isWrapped ? "30px" : "9999px",
+          borderRadius: isWrapped ? RADIUS_WRAPPED : RADIUS_UNWRAPPED,
         }}
       >
         {/* Slider for the selected answer */}
         <div
           className="absolute left-0 top-0 rounded-full bg-white/50 shadow-lg transition-transform duration-300 ease-in-out"
           style={{
-            width: isWrapped ? "100%" : answerWidth, // Full width in wrapped mode
-            height: isWrapped ? `${100 / answers.length}%` : "100%", // Full height in wrapped mode
+            width: isWrapped ? "100%" : answerWidth,
+            height: isWrapped ? `${100 / answers.length}%` : "100%",
             transform: isWrapped
               ? `translateY(${translatePercentage}%)`
-              : `translateX(${translatePercentage}%)`, // Toggle vertically or horizontally based on `isWrapped`
+              : `translateX(${translatePercentage}%)`,
           }}
         ></div>
 
@@ -134,7 +115,6 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
               name="toggle"
               checked={selectedAnswer === answer.id}
               onChange={() => handleSelect(answer.id)}
-              disabled={groupLocked || isLocked(answer.id)}
               className="sr-only"
               aria-checked={selectedAnswer === answer.id}
               aria-label={`Answer option: ${answer.label}`}
