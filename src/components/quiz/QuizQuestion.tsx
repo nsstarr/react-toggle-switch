@@ -77,7 +77,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       </header>
 
       {/* Answer toggles */}
-      <fieldset aria-describedby="feedback" className="mt-6">
+      <fieldset aria-describedby="feedback" className="my-6">
         <legend className="sr-only">Answer the following question</legend>
         {shuffledGroupedAnswers.map((answers, index) => (
           <AnswerToggle
