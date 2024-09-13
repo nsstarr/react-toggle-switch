@@ -75,10 +75,21 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
       ? twoAnswerToggle
       : threeAnswerToggle;
 
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLLabelElement>,
+    answerId: number
+  ) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleSelect(answerId);
+    }
+  };
+
   return (
     <fieldset
       className="mx-auto my-5 flex max-w-screen-md flex-col items-center justify-center"
       aria-labelledby="answer-toggle-group"
+      role="radiogroup"
     >
       <legend id="answer-toggle-group" className="sr-only">
         Select your answer
@@ -109,6 +120,11 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
             key={answer.id}
             className="relative z-10 flex-1 cursor-pointer text-center"
             style={{ flexBasis: answerWidth }}
+            tabIndex={0}
+            role="radio" 
+            aria-checked={selectedAnswer === answer.id} 
+            onKeyDown={(e) => handleKeyDown(e, answer.id)} 
+            onClick={() => handleSelect(answer.id)} 
           >
             <input
               type="radio"
@@ -116,7 +132,6 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
               checked={selectedAnswer === answer.id}
               onChange={() => handleSelect(answer.id)}
               className="sr-only"
-              aria-checked={selectedAnswer === answer.id}
               aria-label={`Answer option: ${answer.label}`}
             />
             <span

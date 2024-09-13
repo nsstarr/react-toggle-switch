@@ -26,7 +26,7 @@ const App: React.FC = () => {
           </div>
         </QuizSlider>
       </CorrectnessProvider>
-    </div>
+    </div> 
   );
 };
 
