@@ -4,6 +4,19 @@
 
 This repository contains a React + TypeScript implementation of a dynamic quiz component. The component allows users to interact with a series of questions and answers, providing visual feedback on the correctness of their choices. It is designed to be reusable, extendable, and easy to integrate into larger applications.
 
+## Quick Start
+
+To get started with the app, follow these steps:
+
+1. **Install Dependencies**: Run the following command to install all necessary dependencies:
+   ```bash
+   npm install
+   ```
+2. **Run the App**: Start the development server with the following command:
+   ```bash
+   npm run dev
+   ```
+
 ## Assumptions
 
 1. **Background States**: The number of background states reflecting the correctness of answers equals the number of grouped answers. Each question will have an associated state indicating whether the user's answer was correct or incorrect.

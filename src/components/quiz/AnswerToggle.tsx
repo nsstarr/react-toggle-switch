@@ -13,7 +13,7 @@ const NO_SELECTION = 0;
 interface AnswerOption {
   id: number;
   label: string;
-  correct: boolean;
+  correct: boolean; 
 }
 
 interface AnswerToggleProps {
