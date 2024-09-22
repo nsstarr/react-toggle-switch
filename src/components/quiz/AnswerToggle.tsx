@@ -21,6 +21,7 @@ interface AnswerToggleProps {
   onAnswerChange: (isCorrect: boolean, answerId: number) => void;
   isLocked: (answerId: number) => boolean;
   correctnessScore: number;
+  correctAnswerIds: Set<number>;
 }
 
 const AnswerToggle: React.FC<AnswerToggleProps> = ({
@@ -28,13 +29,15 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   onAnswerChange,
   isLocked,
   correctnessScore,
+  correctAnswerIds,
 }) => {
   const isWrapped = useIsWrapped(answers, MAX_WIDTH_MOBILE);
 
   const { selectedAnswer, handleSelect } = useAnswerSelection(
     answers,
     isLocked,
-    onAnswerChange
+    onAnswerChange,
+    correctAnswerIds
   );
 
   // Color based on correctness score
@@ -121,10 +124,10 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
             className="relative z-10 flex-1 cursor-pointer text-center"
             style={{ flexBasis: answerWidth }}
             tabIndex={0}
-            role="radio" 
-            aria-checked={selectedAnswer === answer.id} 
-            onKeyDown={(e) => handleKeyDown(e, answer.id)} 
-            onClick={() => handleSelect(answer.id)} 
+            role="radio"
+            aria-checked={selectedAnswer === answer.id}
+            onKeyDown={(e) => handleKeyDown(e, answer.id)}
+            onClick={() => handleSelect(answer.id)}
           >
             <input
               type="radio"

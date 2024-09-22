@@ -15,16 +15,22 @@ const useShuffledGroupedAnswers = (
   const [shuffledGroupedAnswers, setShuffledGroupedAnswers] =
     useState<GroupedAnswerArray>(groupedAnswers);
 
+  // The Fisher-Yates algorithm ensures unbiased shuffling and runs in O(n)
   const shuffleArray = <T>(array: T[]): T[] => {
-    return array
-      .map((item) => ({ item, sortKey: Math.random() }))
-      .sort((a, b) => a.sortKey - b.sortKey)
-      .map(({ item }) => item);
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[randomIndex]] = [
+        shuffledArray[randomIndex],
+        shuffledArray[i],
+      ];
+    }
+    return shuffledArray;
   };
 
   useEffect(() => {
     if (randomized) {
-      // Shuffle the order 
+      // Shuffle the order
       const shuffledAnswers = groupedAnswers.map((group) =>
         shuffleArray(group)
       );
