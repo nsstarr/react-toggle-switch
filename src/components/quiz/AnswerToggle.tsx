@@ -13,7 +13,7 @@ const NO_SELECTION = 0;
 interface AnswerOption {
   id: number;
   label: string;
-  correct: boolean; 
+  correct: boolean;
 }
 
 interface AnswerToggleProps {
@@ -61,19 +61,26 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
   );
 
   const twoAnswerToggle = selectedIndex * 100;
-  const threeAnswerToggle =
-    selectedIndex === 0
-      ? FIRST_ANSWER
-      : selectedIndex === 1
-      ? SECOND_ANSWER
-      : THIRD_ANSWER;
+
+  const getThreeAnswerToggle = (selectedIndex: number): number => {
+    switch (selectedIndex) {
+      case 0:
+        return FIRST_ANSWER;
+      case 1:
+        return SECOND_ANSWER;
+      case 2:
+        return THIRD_ANSWER;
+      default:
+        return NO_SELECTION;
+    }
+  };
 
   const translatePercentage =
     selectedIndex === -1
       ? NO_SELECTION
       : answers.length === 2
       ? twoAnswerToggle
-      : threeAnswerToggle;
+      : getThreeAnswerToggle(selectedIndex);
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLLabelElement>,
@@ -121,10 +128,10 @@ const AnswerToggle: React.FC<AnswerToggleProps> = ({
             className="relative z-10 flex-1 cursor-pointer text-center"
             style={{ flexBasis: answerWidth }}
             tabIndex={0}
-            role="radio" 
-            aria-checked={selectedAnswer === answer.id} 
-            onKeyDown={(e) => handleKeyDown(e, answer.id)} 
-            onClick={() => handleSelect(answer.id)} 
+            role="radio"
+            aria-checked={selectedAnswer === answer.id}
+            onKeyDown={(e) => handleKeyDown(e, answer.id)}
+            onClick={() => handleSelect(answer.id)}
           >
             <input
               type="radio"
