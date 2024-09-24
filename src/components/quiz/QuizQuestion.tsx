@@ -4,6 +4,7 @@ import { useCorrectness } from "../../context/CorrrectnessContext";
 import useCorrectnessCalculation from "../../hooks/quiz/useCorrectnessCalculations";
 import useAnswerState from "../../hooks/quiz/useAnswerState";
 import useShuffledGroupedAnswers from "../../hooks/quiz/useShuffledAnswers";
+import { getBackgroundGradient } from "../../utils/quiz-utils";
 
 interface AnswerOption {
   id: number;
@@ -47,24 +48,12 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     setCorrectness,
   });
 
-  const getBackgroundGradient = () => {
-    switch (Math.round(correctness)) {
-      case 100:
-        return "bg-gradient-correct";
-      case 75:
-        return "bg-gradient-75";
-      case 50:
-        return "bg-gradient-50";
-      case 25:
-        return "bg-gradient-25";
-      default:
-        return "bg-gradient-25";
-    }
-  };
+  // Get the background gradient based on correctness
+  const correctnessBgGradient = getBackgroundGradient(correctness);
 
   return (
     <section
-      className={`h-screen w-full mx-auto px-4 py-8 md:p-20 ${getBackgroundGradient()}`}
+      className={`h-screen w-full mx-auto px-4 py-8 md:p-20 ${correctnessBgGradient}`}
       aria-labelledby="quiz-question"
     >
       <header className="text-center">
