@@ -15,25 +15,31 @@ const useShuffledQuestions = (
   questions: QuizQuestionData[],
   randomized: boolean
 ): QuizQuestionData[] => {
-  const [shuffledQuestions, setShuffledQuestions] = useState<QuizQuestionData[]>(
-    questions
-  );
+  const [shuffledQuestions, setShuffledQuestions] = useState<
+    QuizQuestionData[]
+  >([]);
 
-  const shuffleArray = <T,>(array: T[]): T[] => {
-    return array
-      .map((item) => ({ item, sortKey: Math.random() }))
-      .sort((a, b) => a.sortKey - b.sortKey)
-      .map(({ item }) => item);
+  // Fisher-Yates Shuffle Algorithm
+  const shuffleArray = <T>(array: T[]): T[] => {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[randomIndex]] = [
+        shuffledArray[randomIndex],
+        shuffledArray[i],
+      ];
+    }
+    return shuffledArray;
   };
 
   useEffect(() => {
     if (randomized) {
-      // Shuffle the questions themselves
-      setShuffledQuestions(shuffleArray(questions));
+      const shuffled = shuffleArray(questions);
+      setShuffledQuestions(shuffled);
     } else {
-      setShuffledQuestions(questions); // Original order if not randomized
+      setShuffledQuestions(questions); 
     }
-  }, [randomized]);
+  }, [randomized, questions]);
 
   return shuffledQuestions;
 };
