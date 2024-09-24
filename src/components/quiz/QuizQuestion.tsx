@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import AnswerToggle from "./AnswerToggle";
 import { useCorrectness } from "../../context/CorrrectnessContext";
 import useCorrectnessCalculation from "../../hooks/quiz/useCorrectnessCalculations";
@@ -29,9 +29,16 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     randomized
   );
 
-  const totalCorrectAnswers = shuffledGroupedAnswers
-    .flat()
-    .filter((answer) => answer.correct).length;
+  const correctAnswerIds = useMemo(() => {
+    return new Set(
+      shuffledGroupedAnswers
+        .flat()
+        .filter((answer) => answer.correct)
+        .map((answer) => answer.id) // Extract the IDs
+    );
+  }, [shuffledGroupedAnswers]);
+
+  const totalCorrectAnswers = correctAnswerIds.size;
 
   const {
     selectedAnswers,
@@ -88,6 +95,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
               handleAnswerChange(isCorrect, answerId)
             }
             isLocked={(answerId: number) => lockedAnswers.includes(answerId)}
+            correctAnswerIds={correctAnswerIds}
           />
         ))}
       </fieldset>
